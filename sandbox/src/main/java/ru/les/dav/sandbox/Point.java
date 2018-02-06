@@ -1,7 +1,7 @@
 package ru.les.dav.sandbox;
 
 /**
- * Created by saakovamr on 06.02.18.
+ * Класс точка, с методом вычисления растояния между 2 точками
  */
 public class Point {
    public double x;
