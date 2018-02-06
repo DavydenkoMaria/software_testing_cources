@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
-mainClassName = "Task2Distance"
+mainClassName = "ru.les.dav.sandbox.Task2Distance"
 
 repositories {
     mavenCentral()
