@@ -2,7 +2,8 @@ package ru.les.dav.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import ru.les.dav.addressbook.model.ContactShortData;
 
 /**
@@ -18,13 +19,21 @@ public class ContactHelper extends BaseHelper {
       click(By.xpath("//div[@id='content']/form/input[21]"));
    }
 
-   public void fillContactForm(ContactShortData contactShortData) {
+   public void fillContactForm(ContactShortData contactShortData, boolean creation) {
       type(By.name("firstname"),contactShortData.getFirstName());
       type(By.name("lastname"),contactShortData.getLastName());
       type(By.name("address"),contactShortData.getAddress());
       type(By.name("mobile"),contactShortData.getMobileNumber());
       type(By.name("email"),contactShortData.getEmail());
       type(By.name("title"),contactShortData.getTitle());
+
+      if (creation){
+         if (contactShortData.getGroup() != null){
+            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactShortData.getGroup());
+         }
+      } else {
+         Assert.assertFalse(isElementPresent(By.name("new_group")));
+      }
    }
 
    public void initContactCreation() {
@@ -50,5 +59,15 @@ public class ContactHelper extends BaseHelper {
 
    public void acceptContactDeletion() {
       wd.switchTo().alert().accept();
+   }
+
+   public void createContact(ContactShortData contactData) {
+      initContactCreation();
+      fillContactForm(contactData, true);
+      submitContactCreation();
+   }
+
+   public boolean isThereAContact() {
+      return isElementPresent(By.name("selected[]"));
    }
 }
