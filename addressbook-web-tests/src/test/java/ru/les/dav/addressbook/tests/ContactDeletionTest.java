@@ -1,7 +1,7 @@
 package ru.les.dav.addressbook.tests;
 
-import com.sun.org.apache.xpath.internal.operations.Equals;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.les.dav.addressbook.model.ContactShortData;
 
@@ -12,20 +12,24 @@ import java.util.List;
  */
 public class ContactDeletionTest extends TestBase {
 
+   @BeforeMethod
+   public void ensurePreConditions(){
+      app.goTo().HomePage();
+      if (app.contact().list().size() == 0){
+         app.contact().create(new ContactShortData("Maria", "Davydenko", "Russia, Novosibirsk", "9998887766", "masha@gmail.com", "test", null));
+      }
+   }
+
    @Test
    public void testContactDeletion(){
-      app.getNavigationHelper().gotoHomePage();
-      if (!app.getContactHelper().isThereAContact()){
-         app.getContactHelper().createContact(new ContactShortData("Maria", "Davydenko", "Russia, Novosibirsk", "9998887766", "masha@gmail.com", "test", null));
-      }
-      List<ContactShortData> before = app.getContactHelper().getContactList();
-      app.getContactHelper().selectContact(before.size()-1);
-      app.getContactHelper().deleteContactDeletion();
-      app.getContactHelper().acceptContactDeletion();
-      app.getNavigationHelper().gotoHomePage();
-      List<ContactShortData> after = app.getContactHelper().getContactList();
-      Assert.assertEquals(before.size()-1, after.size());
-      before.remove(before.size()-1);
+      List<ContactShortData> before = app.contact().list();
+      int index = before.size()-1;
+      app.contact().delete(index);
+      app.goTo().HomePage();
+      List<ContactShortData> after = app.contact().list();
+      Assert.assertEquals(index, after.size());
+      before.remove(index);
       Assert.assertEquals(before,after);
    }
+
 }

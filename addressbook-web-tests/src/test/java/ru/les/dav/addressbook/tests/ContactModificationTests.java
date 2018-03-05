@@ -1,6 +1,7 @@
 package ru.les.dav.addressbook.tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.les.dav.addressbook.model.ContactShortData;
 
@@ -12,19 +13,22 @@ import java.util.List;
  */
 public class ContactModificationTests extends TestBase {
 
+   @BeforeMethod
+   public void ensurePreConditions(){
+      app.goTo().HomePage();
+      if (app.contact().list().size() == 0){
+         app.contact().create(new ContactShortData("Maria", "Davydenko", "Russia, Novosibirsk", "9998887766", "masha@gmail.com", "test", null));
+      }
+   }
+
+
    @Test
    public void testContactModification(){
-      app.getNavigationHelper().gotoHomePage();
-      if (!app.getContactHelper().isThereAContact()){
-         app.getContactHelper().createContact(new ContactShortData("Maria", "Davydenko", "Russia, Novosibirsk", "9998887766", "masha@gmail.com", "test", null));
-      }
-      List<ContactShortData> before = app.getContactHelper().getContactList();
-      app.getContactHelper().initContactModification(before.size()+1);
+      List<ContactShortData> before = app.contact().list();
       ContactShortData contact = new ContactShortData(before.get(before.size()-1).getId(),"NewName", "NewLastName", null, null, null, null, null);
-      app.getContactHelper().fillContactForm(contact, false);
-      app.getContactHelper().submitContactModification();
-      app.getNavigationHelper().gotoHomePage();
-      List<ContactShortData> after = app.getContactHelper().getContactList();
+      app.contact().modify(before, contact);
+      app.goTo().HomePage();
+      List<ContactShortData> after = app.contact().list();
       Assert.assertEquals(before.size(), after.size());
       before.remove(before.size()-1);
       before.add(contact);
@@ -33,4 +37,6 @@ public class ContactModificationTests extends TestBase {
       after.sort(byId);
       Assert.assertEquals(before,after);
    }
+
+
 }
