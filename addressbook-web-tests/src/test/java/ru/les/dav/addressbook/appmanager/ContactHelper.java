@@ -2,9 +2,13 @@ package ru.les.dav.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.les.dav.addressbook.model.ContactShortData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by saakovamr on 14.02.18.
@@ -69,5 +73,17 @@ public class ContactHelper extends BaseHelper {
 
    public boolean isThereAContact() {
       return isElementPresent(By.name("selected[]"));
+   }
+
+   public List<ContactShortData> getContactList() {
+      List<ContactShortData> contacts = new ArrayList<ContactShortData>();
+      List<WebElement> elements = wd.findElements(By.name("entry"));
+      for (WebElement element : elements){
+         String lastName = element.findElements(By.tagName("td")).get(1).getText();
+         String firstName = element.findElements(By.tagName("td")).get(2).getText();
+         ContactShortData contact = new ContactShortData(firstName, lastName, null, null, null, null, null);
+         contacts.add(contact);
+      }
+      return contacts;
    }
 }
