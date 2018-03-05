@@ -44,17 +44,16 @@ public class ContactHelper extends BaseHelper {
       click(By.linkText("add new"));
    }
 
-   public void initContactModification() {
-      click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
+   public void initContactModification(int index) {
+      click(By.xpath("//table[@id='maintable']/tbody/tr[" + index + "]/td[8]/a/img"));
    }
 
    public void submitContactModification() {
       click(By.xpath("//div[@id='content']/form[1]/input[22]"));
    }
 
-   public void selectContact() {
-      //click(By.id("2"));
-      click(By.name("selected[]"));
+   public void selectContact(int index) {
+      wd.findElements(By.name("selected[]")).get(index).click();
    }
 
    public void deleteContactDeletion() {
@@ -81,7 +80,8 @@ public class ContactHelper extends BaseHelper {
       for (WebElement element : elements){
          String lastName = element.findElements(By.tagName("td")).get(1).getText();
          String firstName = element.findElements(By.tagName("td")).get(2).getText();
-         ContactShortData contact = new ContactShortData(firstName, lastName, null, null, null, null, null);
+         int id = Integer.parseInt(element.findElements(By.tagName("td")).get(0).findElement(By.name("selected[]")).getAttribute("value"));
+         ContactShortData contact = new ContactShortData(id, firstName, lastName, null, null, null, null, null);
          contacts.add(contact);
       }
       return contacts;
