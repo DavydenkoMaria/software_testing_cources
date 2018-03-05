@@ -1,14 +1,54 @@
 package ru.les.dav.addressbook.model;
 
 public class ContactShortData {
-   private final String firstName;
-   private final String lastName;
-   private final String address;
-   private final String mobileNumber;
-   private final String email;
-   private final String title;
+   private  String firstName;
+   private  String lastName;
+   private  String address;
+   private  String mobileNumber;
+   private  String email;
+   private  String title;
    private String group;
-   private int id;
+   private int id = Integer.MAX_VALUE;
+
+   public ContactShortData withFirstName(String firstName) {
+      this.firstName = firstName;
+      return this;
+   }
+
+   public ContactShortData withLastName(String lastName) {
+      this.lastName = lastName;
+      return this;
+   }
+
+   public ContactShortData withAddress(String address) {
+      this.address = address;
+      return this;
+   }
+
+   public ContactShortData withMobileNumber(String mobileNumber) {
+      this.mobileNumber = mobileNumber;
+      return this;
+   }
+
+   public ContactShortData withEmail(String email) {
+      this.email = email;
+      return this;
+   }
+
+   public ContactShortData withTitle(String title) {
+      this.title = title;
+      return this;
+   }
+
+   public ContactShortData withGroup(String group) {
+      this.group = group;
+      return this;
+   }
+
+   public ContactShortData withId(int id) {
+      this.id = id;
+      return this;
+   }
 
    public int getId() {
       return id;
@@ -21,27 +61,6 @@ public class ContactShortData {
               ", lastName='" + lastName + '\'' +
               ", id=" + id +
               '}';
-   }
-
-   public ContactShortData(int id, String firstName, String lastName, String address, String mobileNumber, String email, String title, String group) {
-      this.id = id;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.address = address;
-      this.mobileNumber = mobileNumber;
-      this.email = email;
-      this.title = title;
-      this.group = group;
-   }
-   public ContactShortData(String firstName, String lastName, String address, String mobileNumber, String email, String title, String group) {
-      this.id = Integer.MAX_VALUE;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.address = address;
-      this.mobileNumber = mobileNumber;
-      this.email = email;
-      this.title = title;
-      this.group = group;
    }
 
    public String getFirstName() {
