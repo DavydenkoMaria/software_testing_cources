@@ -95,6 +95,10 @@ public class ContactHelper extends BaseHelper {
       return isElementPresent(By.name("selected[]"));
    }
 
+   public int count() {
+      return wd.findElements(By.name("entry")).size();
+   }
+
    private Contacts contsactCache = null;
    public Contacts all() {
       if (contsactCache!= null){
