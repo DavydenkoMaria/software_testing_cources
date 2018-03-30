@@ -58,7 +58,6 @@ public class ContactHelper extends BaseHelper {
 
 
    public void selectContactById(int id) {
-      String link = "input[value='" + id +"']";
       wd.findElement(By.cssSelector("input[value='" + id +"']")).click();
    }
 
@@ -73,12 +72,14 @@ public class ContactHelper extends BaseHelper {
    public void create(ContactShortData contactData) {
       initContactCreation();
       fillContactForm(contactData, true);
+      contsactCache = null;
       submitContactCreation();
    }
 
    public void modify(ContactShortData contact) {
       initContactModificationById(contact.getId());
       fillContactForm(contact, false);
+      contsactCache = null;
       submitContactModification();
    }
 
@@ -86,6 +87,7 @@ public class ContactHelper extends BaseHelper {
    public void delete(ContactShortData contact) {
       selectContactById(contact.getId());
       deleteContactDeletion();
+      contsactCache = null;
       acceptContactDeletion();
    }
 
@@ -93,15 +95,19 @@ public class ContactHelper extends BaseHelper {
       return isElementPresent(By.name("selected[]"));
    }
 
+   private Contacts contsactCache = null;
    public Contacts all() {
-      Contacts contacts = new Contacts();
+      if (contsactCache!= null){
+         return new Contacts(contsactCache);
+      }
+      contsactCache = new Contacts();
       List<WebElement> elements = wd.findElements(By.name("entry"));
       for (WebElement element : elements){
          String lastName = element.findElements(By.tagName("td")).get(1).getText();
          String firstName = element.findElements(By.tagName("td")).get(2).getText();
          int id = Integer.parseInt(element.findElements(By.tagName("td")).get(0).findElement(By.name("selected[]")).getAttribute("value"));
-         contacts.add(new ContactShortData().withId(id).withFirstName(firstName).withLastName(lastName));
+         contsactCache.add(new ContactShortData().withId(id).withFirstName(firstName).withLastName(lastName));
       }
-      return contacts;
+      return new Contacts(contsactCache);
    }
 }
