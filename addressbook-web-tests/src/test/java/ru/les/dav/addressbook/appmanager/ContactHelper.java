@@ -7,8 +7,9 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.les.dav.addressbook.model.ContactShortData;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by saakovamr on 14.02.18.
@@ -44,16 +45,22 @@ public class ContactHelper extends BaseHelper {
       click(By.linkText("add new"));
    }
 
-   public void initContactModification(int index) {
-      click(By.xpath("//table[@id='maintable']/tbody/tr[" + index + "]/td[8]/a/img"));
+
+   public void initContactModificationById(int id) {
+      String link = ("a[href='edit.php?id=" + id +"']");
+      WebElement first = wd.findElement(By.cssSelector(link));
+      WebElement second = first.findElement(By.tagName("img"));
+      second.click();
    }
 
    public void submitContactModification() {
       click(By.xpath("//div[@id='content']/form[1]/input[22]"));
    }
 
-   public void selectContact(int index) {
-      wd.findElements(By.name("selected[]")).get(index).click();
+
+   public void selectContactById(int id) {
+      String link = "input[value='" + id +"']";
+      wd.findElement(By.cssSelector("input[value='" + id +"']")).click();
    }
 
    public void deleteContactDeletion() {
@@ -70,14 +77,15 @@ public class ContactHelper extends BaseHelper {
       submitContactCreation();
    }
 
-   public void modify(List<ContactShortData> before, ContactShortData contact) {
-      initContactModification(before.size()+1);
+   public void modify(ContactShortData contact) {
+      initContactModificationById(contact.getId());
       fillContactForm(contact, false);
       submitContactModification();
    }
 
-   public void delete(int index) {
-      selectContact(index);
+
+   public void delete(ContactShortData contact) {
+      selectContactById(contact.getId());
       deleteContactDeletion();
       acceptContactDeletion();
    }
@@ -86,8 +94,8 @@ public class ContactHelper extends BaseHelper {
       return isElementPresent(By.name("selected[]"));
    }
 
-   public List<ContactShortData> list() {
-      List<ContactShortData> contacts = new ArrayList<ContactShortData>();
+   public Set<ContactShortData> all() {
+      Set<ContactShortData> contacts = new HashSet<ContactShortData>();
       List<WebElement> elements = wd.findElements(By.name("entry"));
       for (WebElement element : elements){
          String lastName = element.findElements(By.tagName("td")).get(1).getText();
