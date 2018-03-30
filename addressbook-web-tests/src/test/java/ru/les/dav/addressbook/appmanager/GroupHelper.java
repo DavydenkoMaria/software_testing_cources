@@ -3,13 +3,10 @@ package ru.les.dav.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
 import ru.les.dav.addressbook.model.GroupData;
+import ru.les.dav.addressbook.model.Groups;
 
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by saakovamr on 14.02.18.
@@ -82,8 +79,8 @@ public class GroupHelper extends BaseHelper {
       return wd.findElements(By.name("selected[]")).size();
    }
 
-   public Set<GroupData> all() {
-      Set<GroupData> groups = new HashSet<GroupData>();
+   public Groups all() {
+      Groups groups = new Groups();
       List<WebElement> elements = wd.findElements(By.cssSelector("span.group"));
       for (WebElement element : elements){
          String name = element.getText();

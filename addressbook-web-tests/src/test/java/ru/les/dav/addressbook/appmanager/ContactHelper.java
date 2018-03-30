@@ -6,10 +6,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.les.dav.addressbook.model.ContactShortData;
+import ru.les.dav.addressbook.model.Contacts;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by saakovamr on 14.02.18.
@@ -94,8 +93,8 @@ public class ContactHelper extends BaseHelper {
       return isElementPresent(By.name("selected[]"));
    }
 
-   public Set<ContactShortData> all() {
-      Set<ContactShortData> contacts = new HashSet<ContactShortData>();
+   public Contacts all() {
+      Contacts contacts = new Contacts();
       List<WebElement> elements = wd.findElements(By.name("entry"));
       for (WebElement element : elements){
          String lastName = element.findElements(By.tagName("td")).get(1).getText();

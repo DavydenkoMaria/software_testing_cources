@@ -1,11 +1,12 @@
 package ru.les.dav.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.les.dav.addressbook.model.ContactShortData;
+import ru.les.dav.addressbook.model.Contacts;
 
-import java.util.Set;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by saakovamr on 14.02.18.
@@ -23,15 +24,13 @@ public class ContactDeletionTest extends TestBase {
 
    @Test
    public void testContactDeletion(){
-      Set<ContactShortData> before = app.contact().all();
+      Contacts before = app.contact().all();
       ContactShortData deletedContact = before.iterator().next();
-      int index = before.size()-1;
       app.contact().delete(deletedContact);
       app.goTo().HomePage();
-      Set<ContactShortData> after = app.contact().all();
-      Assert.assertEquals(index, after.size());
-      before.remove(deletedContact);
-      Assert.assertEquals(before,after);
+      Contacts after = app.contact().all();
+      assertThat(after.size(), equalTo(before.size() -1));
+      assertThat(after, equalTo(before.withOut(deletedContact)));
    }
 
 }
