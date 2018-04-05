@@ -1,8 +1,15 @@
 package ru.les.dav.addressbook.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import java.io.File;
+@XStreamAlias("contact")
 
 public class ContactShortData {
+   @XStreamOmitField
+   private int id = Integer.MAX_VALUE;
+
    private String firstName;
    private String lastName;
    private String address;
@@ -62,8 +69,6 @@ public class ContactShortData {
       this.allPhones = allPhones;
       return this;
    }
-
-   private int id = Integer.MAX_VALUE;
 
    public ContactShortData withFirstName(String firstName) {
       this.firstName = firstName;
