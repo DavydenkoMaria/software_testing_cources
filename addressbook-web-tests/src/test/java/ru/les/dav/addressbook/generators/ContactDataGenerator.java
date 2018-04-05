@@ -50,20 +50,20 @@ public class ContactDataGenerator {
    }
 
    private void save (List<ContactShortData> contacts, File file) throws IOException {
-      Writer writer = new FileWriter(file);
-      for (ContactShortData contact : contacts) {
-         writer.write(String.format("%s;%s;%s;%s;%s\n", contact.getFirstName(), contact.getLastName()
-                 , contact.getAddress(), contact.getEmail(), contact.getMobileNumber()));
+      try(Writer writer = new FileWriter(file)) {
+         for (ContactShortData contact : contacts) {
+            writer.write(String.format("%s;%s;%s;%s;%s\n", contact.getFirstName(), contact.getLastName()
+                    , contact.getAddress(), contact.getEmail(), contact.getMobileNumber()));
+         }
       }
-      writer.close();
    }
    private void saveAsXml(List<ContactShortData> contacts, File file) throws IOException {
       XStream xstream = new XStream();
       xstream.processAnnotations(ContactShortData.class);
       String xml = xstream.toXML(contacts);
-      Writer writer = new FileWriter(file);
-      writer.write(xml);
-      writer.close();
+      try(Writer writer = new FileWriter(file)) {
+         writer.write(xml);
+      }
    }
 
    private List<ContactShortData> generateContacts(int count) {
