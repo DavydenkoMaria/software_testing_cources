@@ -109,9 +109,31 @@ public class ContactHelper extends BaseHelper {
       for (WebElement element : elements){
          String lastName = element.findElements(By.tagName("td")).get(1).getText();
          String firstName = element.findElements(By.tagName("td")).get(2).getText();
+         String address = element.findElements(By.tagName("td")).get(3).getText();
+         String allPhones = element.findElements(By.tagName("td")).get(5).getText();
+         String allEmails = element.findElements(By.tagName("td")).get(4).getText();
+         //String[] phones = element.findElements(By.tagName("td")).get(5).getText().split("\n");
          int id = Integer.parseInt(element.findElements(By.tagName("td")).get(0).findElement(By.name("selected[]")).getAttribute("value"));
-         contsactCache.add(new ContactShortData().withId(id).withFirstName(firstName).withLastName(lastName));
+         contsactCache.add(new ContactShortData().withId(id).withFirstName(firstName).withLastName(lastName)
+                 .withAllPhones(allPhones).withAddress(address).withAllEmails(allEmails));
       }
       return new Contacts(contsactCache);
+   }
+
+   public ContactShortData infoFromEditForm(ContactShortData contact) {
+      initContactModificationById(contact.getId());
+      String firstName = wd.findElement(By.name("firstname")).getAttribute("value");
+      String lastName = wd.findElement(By.name("lastname")).getAttribute("value");
+      String homePhone = wd.findElement(By.name("home")).getAttribute("value");
+      String mobileNumber = wd.findElement(By.name("mobile")).getAttribute("value");
+      String workPhone = wd.findElement(By.name("work")).getAttribute("value");
+      String address = wd.findElement(By.name("address")).getAttribute("value");
+      String email = wd.findElement(By.name("email")).getAttribute("value");
+      String email2 = wd.findElement(By.name("email2")).getAttribute("value");
+      String email3 = wd.findElement(By.name("email3")).getAttribute("value");
+      wd.findElement(By.linkText("home")).click();
+      return new ContactShortData().withId(contact.getId()).withFirstName(firstName).withLastName(lastName)
+              .withHomePhone(homePhone).withMobileNumber(mobileNumber).withWorkPhone(workPhone)
+              .withAddress(address).withEmail(email).withEmail2(email2).withEmail3(email3);
    }
 }

@@ -1,13 +1,56 @@
 package ru.les.dav.addressbook.model;
 
 public class ContactShortData {
-   private  String firstName;
-   private  String lastName;
-   private  String address;
-   private  String mobileNumber;
-   private  String email;
-   private  String title;
+   private String firstName;
+   private String lastName;
+   private String address;
+   private String mobileNumber;
+   private String email;
+   private String email2;
+   private String email3;
+   private String allEmails;
+   private String title;
    private String group;
+   private String homePhone;
+   private String workPhone;
+   private String allPhones;
+
+   public String getEmail2() {
+      return email2;
+   }
+
+   public ContactShortData withEmail2(String email2) {
+      this.email2 = email2;
+      return this;
+   }
+
+   public String getEmail3() {
+      return email3;
+   }
+
+   public ContactShortData withEmail3(String email3) {
+      this.email3 = email3;
+      return this;
+   }
+
+   public String getAllEmails() {
+      return allEmails;
+   }
+
+   public ContactShortData withAllEmails(String allEmails) {
+      this.allEmails = allEmails;
+      return this;
+   }
+
+   public String getAllPhones() {
+      return allPhones;
+   }
+
+   public ContactShortData withAllPhones(String allPhones) {
+      this.allPhones = allPhones;
+      return this;
+   }
+
    private int id = Integer.MAX_VALUE;
 
    public ContactShortData withFirstName(String firstName) {
@@ -22,6 +65,16 @@ public class ContactShortData {
 
    public ContactShortData withAddress(String address) {
       this.address = address;
+      return this;
+   }
+
+   public ContactShortData withHomePhone(String homePhone) {
+      this.homePhone = homePhone;
+      return this;
+   }
+
+   public ContactShortData withWorkPhone(String workPhone) {
+      this.workPhone = workPhone;
       return this;
    }
 
@@ -97,6 +150,14 @@ public class ContactShortData {
 
    public String getMobileNumber() {
       return mobileNumber;
+   }
+
+   public String getHomePhone() {
+      return homePhone;
+   }
+
+   public String getWorkPhone() {
+      return workPhone;
    }
 
    public String getEmail() {
