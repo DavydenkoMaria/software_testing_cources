@@ -5,6 +5,8 @@ import org.testng.annotations.Test;
 import ru.les.dav.addressbook.model.ContactShortData;
 import ru.les.dav.addressbook.model.Contacts;
 
+import java.io.File;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -14,8 +16,10 @@ public class ContactCreationTest  extends TestBase{
     public void testContactCreation() {
         app.goTo().HomePage();
         Contacts before = app.contact().all();
+        File photo = new File("src/test/resources/cat.jpg");
         ContactShortData contact = new ContactShortData().withFirstName("Maria").withLastName("Davydenko")
-                .withAddress("Russia, Novosibirsk").withMobileNumber("9998887766").withEmail("masha@gmail.com");
+                .withAddress("Russia, Novosibirsk").withMobileNumber("9998887766").withEmail("masha@gmail.com")
+                .withPhoto(photo);
         app.contact().create(contact);
         app.goTo().HomePage();
         assertThat(app.contact().count(), equalTo(before.size()+1));
@@ -36,4 +40,5 @@ public class ContactCreationTest  extends TestBase{
         Contacts after = app.contact().all();
         assertThat(after, equalTo(before));
     }
+
 }

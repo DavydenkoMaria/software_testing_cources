@@ -30,6 +30,7 @@ public class ContactHelper extends BaseHelper {
       type(By.name("mobile"),contactShortData.getMobileNumber());
       type(By.name("email"),contactShortData.getEmail());
       type(By.name("title"),contactShortData.getTitle());
+      attach(By.name("photo"),contactShortData.getPhoto());
 
       if (creation){
          if (contactShortData.getGroup() != null){

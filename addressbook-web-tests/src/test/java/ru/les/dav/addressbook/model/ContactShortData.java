@@ -1,5 +1,7 @@
 package ru.les.dav.addressbook.model;
 
+import java.io.File;
+
 public class ContactShortData {
    private String firstName;
    private String lastName;
@@ -14,6 +16,16 @@ public class ContactShortData {
    private String homePhone;
    private String workPhone;
    private String allPhones;
+   private File photo;
+
+   public File getPhoto() {
+      return photo;
+   }
+
+   public ContactShortData withPhoto(File photo) {
+      this.photo = photo;
+      return this;
+   }
 
    public String getEmail2() {
       return email2;
