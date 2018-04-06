@@ -30,8 +30,9 @@ public class ContactHelper extends BaseHelper {
       type(By.name("mobile"),contactShortData.getMobileNumber());
       type(By.name("email"),contactShortData.getEmail());
       type(By.name("title"),contactShortData.getTitle());
+      System.out.println("test0");
       attach(By.name("photo"),contactShortData.getPhoto());
-
+      System.out.println("test");
       if (creation){
          if (contactShortData.getGroup() != null){
             new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactShortData.getGroup());

@@ -2,35 +2,61 @@ package ru.les.dav.addressbook.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.io.File;
 @XStreamAlias("contact")
-
+@Entity
+@Table(name = "addressbook")
 public class ContactShortData {
    @XStreamOmitField
+   @Id
+   @Column(name = "id")
    private int id = Integer.MAX_VALUE;
-
+   @Column(name = "firstname")
    private String firstName;
+   @Column(name = "lastname")
    private String lastName;
+   @Column(name = "address")
+   @Type(type = "text")
    private String address;
+   @Column(name = "mobile")
+   @Type(type = "text")
    private String mobileNumber;
+   @Type(type = "text")
    private String email;
+   @Type(type = "text")
    private String email2;
+   @Type(type = "text")
    private String email3;
+   @Transient
    private String allEmails;
+   @Transient
    private String title;
+   @Transient
    private String group;
+   @Column(name = "home")
+   @Type(type = "text")
    private String homePhone;
+   @Column(name = "work")
+   @Type(type = "text")
    private String workPhone;
+   @Transient
    private String allPhones;
-   private File photo;
+   @Column(name = "photo")
+   @Type(type = "text")
+   private String photo;
 
    public File getPhoto() {
-      return photo;
+      if (photo!= null) {
+         return new File(photo);
+      }
+      return null;
    }
 
    public ContactShortData withPhoto(File photo) {
-      this.photo = photo;
+      this.photo = photo.getPath();
       return this;
    }
 
@@ -125,15 +151,6 @@ public class ContactShortData {
    }
 
    @Override
-   public String toString() {
-      return "ContactShortData{" +
-              "firstName='" + firstName + '\'' +
-              ", lastName='" + lastName + '\'' +
-              ", id=" + id +
-              '}';
-   }
-
-   @Override
    public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
@@ -142,15 +159,34 @@ public class ContactShortData {
 
       if (id != that.id) return false;
       if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
-      return lastName != null ? lastName.equals(that.lastName) : that.lastName == null;
+      if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
+      if (address != null ? !address.equals(that.address) : that.address != null) return false;
+      if (mobileNumber != null ? !mobileNumber.equals(that.mobileNumber) : that.mobileNumber != null) return false;
+      return email != null ? email.equals(that.email) : that.email == null;
    }
 
    @Override
    public int hashCode() {
-      int result = firstName != null ? firstName.hashCode() : 0;
+      int result = id;
+      result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
       result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-      result = 31 * result + id;
+      result = 31 * result + (address != null ? address.hashCode() : 0);
+      result = 31 * result + (mobileNumber != null ? mobileNumber.hashCode() : 0);
+      result = 31 * result + (email != null ? email.hashCode() : 0);
       return result;
+   }
+
+   @Override
+   public String toString() {
+      return "ContactShortData{" +
+              "id=" + id +
+              ", firstName='" + firstName + '\'' +
+
+              ", lastName='" + lastName + '\'' +
+              ", address='" + address + '\'' +
+              ", mobileNumber='" + mobileNumber + '\'' +
+              ", email='" + email + '\'' +
+              '}';
    }
 
    public String getFirstName() {
