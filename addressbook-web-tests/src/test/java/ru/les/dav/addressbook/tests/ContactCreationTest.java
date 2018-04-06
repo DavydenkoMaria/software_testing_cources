@@ -49,19 +49,21 @@ public class ContactCreationTest  extends TestBase{
         Contacts after = app.db().contacts();
         assertThat(after, equalTo(
                 before.withAdded(contact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
+        verifyContactListInUI();
     }
 
     @Test
     public void testBadContactCreation() {
         app.goTo().HomePage();
-        Contacts before = app.contact().all();
+        Contacts before = app.db().contacts();
         ContactShortData contact = new ContactShortData().withFirstName("Maria'").withLastName("Davydenko")
                 .withAddress("Russia, Novosibirsk").withMobileNumber("9998887766").withEmail("masha@gmail.com");
         app.contact().create(contact);
         app.goTo().HomePage();
         assertThat(app.contact().count(), equalTo(before.size()));
-        Contacts after = app.contact().all();
+        Contacts after = app.db().contacts();
         assertThat(after, equalTo(before));
+        verifyContactListInUI();
     }
 
 }
