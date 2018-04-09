@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.les.dav.addressbook.model.ContactShortData;
 import ru.les.dav.addressbook.model.Contacts;
+import ru.les.dav.addressbook.model.GroupData;
 
 import java.util.List;
 
@@ -30,12 +31,10 @@ public class ContactHelper extends BaseHelper {
       type(By.name("mobile"),contactShortData.getMobileNumber());
       type(By.name("email"),contactShortData.getEmail());
       type(By.name("title"),contactShortData.getTitle());
-      System.out.println("test0");
       attach(By.name("photo"),contactShortData.getPhoto());
-      System.out.println("test");
       if (creation){
-         if (contactShortData.getGroup() != null){
-            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactShortData.getGroup());
+         if (contactShortData.getGroups().size() == 1){
+            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactShortData.getGroups().iterator().next().getName());
          }
       } else {
          Assert.assertFalse(isElementPresent(By.name("new_group")));
@@ -74,14 +73,14 @@ public class ContactHelper extends BaseHelper {
    public void create(ContactShortData contactData) {
       initContactCreation();
       fillContactForm(contactData, true);
-      contsactCache = null;
+      contactCache = null;
       submitContactCreation();
    }
 
    public void modify(ContactShortData contact) {
       initContactModificationById(contact.getId());
       fillContactForm(contact, false);
-      contsactCache = null;
+      contactCache = null;
       submitContactModification();
    }
 
@@ -89,8 +88,40 @@ public class ContactHelper extends BaseHelper {
    public void delete(ContactShortData contact) {
       selectContactById(contact.getId());
       deleteContactDeletion();
-      contsactCache = null;
+      contactCache = null;
       acceptContactDeletion();
+   }
+
+   public void removeFromGroup(ContactShortData contact, GroupData group) {
+      selectContactById(contact.getId());
+      selectGroupForRemove(group.getName());
+      removeContactFromGroup();
+      contactCache = null;
+   }
+
+   private void removeContactFromGroup() {
+      wd.findElement(By.name("remove")).click();
+   }
+
+   private void selectGroupForRemove(String group) {
+      new Select(wd.findElement(By.name("group"))).selectByVisibleText(group);
+   }
+
+   public void addToGroup(ContactShortData contact, GroupData group) {
+      selectContactById(contact.getId());
+      selectGroupforAdding(group.getName());
+      addContactToGroup();
+      contactCache = null;
+   }
+
+   private void addContactToGroup() {
+      //wd.findElement(By.name("add")).click();
+      wd.findElement(By.cssSelector("input[value='Add to']")).click();
+   }
+
+   private void selectGroupforAdding(String group) {
+
+      new Select(wd.findElement(By.name("to_group"))).selectByVisibleText(group);
    }
 
    public boolean isThereAContact() {
@@ -101,12 +132,12 @@ public class ContactHelper extends BaseHelper {
       return wd.findElements(By.name("entry")).size();
    }
 
-   private Contacts contsactCache = null;
+   private Contacts contactCache = null;
    public Contacts all() {
-      if (contsactCache!= null){
-         return new Contacts(contsactCache);
+      if (contactCache != null){
+         return new Contacts(contactCache);
       }
-      contsactCache = new Contacts();
+      contactCache = new Contacts();
       List<WebElement> elements = wd.findElements(By.name("entry"));
       for (WebElement element : elements){
          String lastName = element.findElements(By.tagName("td")).get(1).getText();
@@ -116,10 +147,10 @@ public class ContactHelper extends BaseHelper {
          String allEmails = element.findElements(By.tagName("td")).get(4).getText();
          //String[] phones = element.findElements(By.tagName("td")).get(5).getText().split("\n");
          int id = Integer.parseInt(element.findElements(By.tagName("td")).get(0).findElement(By.name("selected[]")).getAttribute("value"));
-         contsactCache.add(new ContactShortData().withId(id).withFirstName(firstName).withLastName(lastName)
+         contactCache.add(new ContactShortData().withId(id).withFirstName(firstName).withLastName(lastName)
                  .withAllPhones(allPhones).withAddress(address).withAllEmails(allEmails));
       }
-      return new Contacts(contsactCache);
+      return new Contacts(contactCache);
    }
 
    public ContactShortData infoFromEditForm(ContactShortData contact) {
@@ -138,4 +169,7 @@ public class ContactHelper extends BaseHelper {
               .withHomePhone(homePhone).withMobileNumber(mobileNumber).withWorkPhone(workPhone)
               .withAddress(address).withEmail(email).withEmail2(email2).withEmail3(email3);
    }
+
+
+
 }

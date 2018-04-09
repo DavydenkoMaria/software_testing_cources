@@ -6,6 +6,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+
 @XStreamAlias("contact")
 @Entity
 @Table(name = "addressbook")
@@ -14,39 +17,55 @@ public class ContactShortData {
    @Id
    @Column(name = "id")
    private int id = Integer.MAX_VALUE;
+
    @Column(name = "firstname")
    private String firstName;
+
    @Column(name = "lastname")
    private String lastName;
+
    @Column(name = "address")
    @Type(type = "text")
    private String address;
+
    @Column(name = "mobile")
    @Type(type = "text")
    private String mobileNumber;
+
    @Type(type = "text")
    private String email;
+
    @Type(type = "text")
    private String email2;
+
    @Type(type = "text")
    private String email3;
+
    @Transient
    private String allEmails;
+
    @Transient
    private String title;
-   @Transient
-   private String group;
+
    @Column(name = "home")
    @Type(type = "text")
    private String homePhone;
+
    @Column(name = "work")
    @Type(type = "text")
    private String workPhone;
+
    @Transient
    private String allPhones;
+
    @Column(name = "photo")
    @Type(type = "text")
    private String photo;
+
+   @ManyToMany(fetch = FetchType.EAGER)
+   @JoinTable(name = "address_in_groups",
+           joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
+   private Set<GroupData> groups = new HashSet<GroupData>();
 
    public File getPhoto() {
       if (photo!= null) {
@@ -136,9 +155,8 @@ public class ContactShortData {
       return this;
    }
 
-   public ContactShortData withGroup(String group) {
-      this.group = group;
-      return this;
+   public Groups getGroups() {
+      return new Groups(groups);
    }
 
    public ContactShortData withId(int id) {
@@ -151,32 +169,6 @@ public class ContactShortData {
    }
 
    @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      ContactShortData that = (ContactShortData) o;
-
-      if (id != that.id) return false;
-      if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
-      if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
-      if (address != null ? !address.equals(that.address) : that.address != null) return false;
-      if (mobileNumber != null ? !mobileNumber.equals(that.mobileNumber) : that.mobileNumber != null) return false;
-      return email != null ? email.equals(that.email) : that.email == null;
-   }
-
-   @Override
-   public int hashCode() {
-      int result = id;
-      result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-      result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-      result = 31 * result + (address != null ? address.hashCode() : 0);
-      result = 31 * result + (mobileNumber != null ? mobileNumber.hashCode() : 0);
-      result = 31 * result + (email != null ? email.hashCode() : 0);
-      return result;
-   }
-
-   @Override
    public String toString() {
       return "ContactShortData{" +
               "id=" + id +
@@ -186,6 +178,7 @@ public class ContactShortData {
               ", address='" + address + '\'' +
               ", mobileNumber='" + mobileNumber + '\'' +
               ", email='" + email + '\'' +
+              "groups=" + groups + '\'' +
               '}';
    }
 
@@ -221,7 +214,42 @@ public class ContactShortData {
       return title;
    }
 
-   public String getGroup() {
-      return group;
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      ContactShortData that = (ContactShortData) o;
+
+      if (id != that.id) return false;
+      if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+      if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
+      if (address != null ? !address.equals(that.address) : that.address != null) return false;
+      if (mobileNumber != null ? !mobileNumber.equals(that.mobileNumber) : that.mobileNumber != null) return false;
+      if (email != null ? !email.equals(that.email) : that.email != null) return false;
+      return groups != null ? groups.equals(that.groups) : that.groups == null;
+   }
+
+   @Override
+   public int hashCode() {
+      int result = id;
+      result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+      result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+      result = 31 * result + (address != null ? address.hashCode() : 0);
+      result = 31 * result + (mobileNumber != null ? mobileNumber.hashCode() : 0);
+      result = 31 * result + (email != null ? email.hashCode() : 0);
+      return result;
+   }
+
+
+   public ContactShortData inGroup(GroupData group) {
+      groups.add(group);
+
+      return this;
+   }
+
+   public ContactShortData withGroup(GroupData group) {
+      this.groups.add(group);
+      return this;
    }
 }

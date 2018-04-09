@@ -16,7 +16,6 @@ public class ContactModificationTests extends TestBase {
 
    @BeforeMethod
    public void ensurePreConditions(){
-      System.out.println(app.db().contacts().size());
       if (app.db().contacts().size() ==0){
          app.contact().create(new ContactShortData().withFirstName("Maria").withLastName("Davydenko")
                  .withAddress("Russia, Novosibirsk").withMobileNumber("9998887766").withEmail("masha@gmail.com"));
