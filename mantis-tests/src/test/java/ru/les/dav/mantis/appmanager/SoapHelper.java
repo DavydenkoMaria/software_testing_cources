@@ -1,0 +1,62 @@
+package ru.les.dav.mantis.appmanager;
+
+import biz.futureware.mantis.rpc.soap.client.*;
+import ru.les.dav.mantis.model.Issue;
+import ru.les.dav.mantis.model.Project;
+
+import javax.xml.rpc.ServiceException;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+/**
+ * Created by saakovamr on 10.04.18.
+ */
+public class SoapHelper {
+
+   private ApplicationManager app;
+
+   public SoapHelper(ApplicationManager app) {
+      this.app = app;
+   }
+
+   public Set<Project> getProjects() throws MalformedURLException, ServiceException, RemoteException {
+      MantisConnectPortType mc = getMantisConnect();
+      ProjectData[] projects = mc.mc_projects_get_user_accessible("administrator", "root");
+      return Arrays.asList(projects).stream().map((p) -> new Project()
+              .withId(p.getId().intValue()).withName(p.getName())).collect(Collectors.toSet());
+   }
+
+   private MantisConnectPortType getMantisConnect() throws ServiceException, MalformedURLException {
+      return new MantisConnectLocator()
+                 .getMantisConnectPort(new URL(app.getProperty("soap.link")));
+   }
+
+   public Issue addIssue(Issue issue) throws MalformedURLException, ServiceException, RemoteException {
+      MantisConnectPortType mc = getMantisConnect();
+      String[] categories = mc.mc_project_get_categories("administrator", "root", BigInteger.valueOf(issue.getProject().getId()));
+      IssueData issueData = new IssueData();
+      issueData.setSummary(issue.getSummary());
+      issueData.setDescription(issue.getDescription());
+      issueData.setProject(new ObjectRef(BigInteger.valueOf(issue.getProject().getId()), String.valueOf(issue.getProject().getId())));
+      issueData.setCategory(categories[0]);
+      BigInteger issueId = mc.mc_issue_add("administrator", "root", issueData);
+      IssueData newIssueData = mc.mc_issue_get("administrator", "root", issueId);
+      return new Issue().withId(newIssueData.getId().intValue())
+              .withSummary(newIssueData.getSummary()).withDescription(newIssueData.getDescription())
+              .withProject(new Project().withId(newIssueData.getProject().getId().intValue())
+                      .withName(newIssueData.getProject().getName()));
+   }
+
+   public boolean getIssueWithId(int issueId) throws RemoteException, MalformedURLException, ServiceException {
+      MantisConnectPortType mc = getMantisConnect();
+      IssueData newIssueData = mc.mc_issue_get("administrator", "root", BigInteger.valueOf(issueId));
+      ObjectRef status = newIssueData.getStatus();
+      return !status.getName().equals("closed");
+   }
+}
