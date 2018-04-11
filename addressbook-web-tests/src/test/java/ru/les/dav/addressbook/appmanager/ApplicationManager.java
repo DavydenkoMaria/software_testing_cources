@@ -55,7 +55,13 @@ public class ApplicationManager {
       } else {
          DesiredCapabilities capabilities = new DesiredCapabilities();
          capabilities.setBrowserName(browser);
+         if (browser.equals("firefox")){
+            //capabilities.setVersion("52.6.0");
+            FirefoxOptions options = new FirefoxOptions();
+            capabilities.setCapability("firefox.binary", "/home/saakovamr/Загрузки/firefox/firefox");
+         }
          wd = new RemoteWebDriver(new URL(properties.getProperty("selenium.server")), capabilities);
+      System.out.println("sucsses");
       }
 
 
