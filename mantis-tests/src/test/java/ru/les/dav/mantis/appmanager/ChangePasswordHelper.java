@@ -23,6 +23,17 @@ public class ChangePasswordHelper extends BaseHelper{
       wd.get(app.getProperty("web.baseUrl") + link);
       click(By.cssSelector("input[value='Reset Password'"));
    }
+   public UserData start(UserData admin) {
+      wd.get(app.getProperty("web.baseUrl") + "/login_page.php");
+      type(By.name("username"), admin.getUsername());
+      type(By.name("password"), admin.getPassword());
+      click(By.cssSelector("input[value='Login'"));
+      UserData user1 = app.dbGet().chooseUser();
+      String link = "/manage_user_edit_page.php?user_id=" + user1.getId();
+      wd.get(app.getProperty("web.baseUrl") + link);
+      click(By.cssSelector("input[value='Reset Password'"));
+      return user1;
+   }
 
    public void finish(String confirmationLink, String password) {
       wd.get(confirmationLink);

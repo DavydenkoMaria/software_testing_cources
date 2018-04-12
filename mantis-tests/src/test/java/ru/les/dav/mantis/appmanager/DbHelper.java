@@ -37,4 +37,18 @@ public class DbHelper {
       }
       return null;
    }
+
+   public UserData chooseUser() {
+      Session session = sessionFactory.openSession();
+      session.beginTransaction();
+      List<UserData> result = session.createQuery( "from UserData").list();
+      session.getTransaction().commit();
+      session.close();
+      for (UserData user : result){
+         if(user.getId() != 1){
+            return user;
+         }
+      }
+      return null;
+   }
 }

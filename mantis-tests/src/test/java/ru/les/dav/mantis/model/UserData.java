@@ -33,9 +33,9 @@ public class UserData {
    @Column(name = "username")
 
    public String username;
-   @Transient
+   @Column(name = "password")
    public String password;
-   @Transient
+   @Column(name = "email")
    public String email;
 
    @Override

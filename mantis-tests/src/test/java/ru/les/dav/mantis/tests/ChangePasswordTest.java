@@ -26,8 +26,9 @@ public class ChangePasswordTest extends TestBase{
    public void testPasswordChange() throws IOException, MessagingException, InterruptedException {
       String passwordNew = "passwordNewest";
       UserData admin = new UserData().withUsername("administrator").withPassword("root");
-      UserData user = new UserData().withUsername("user10").withEmail("user10@localhost.localhost");
-      app.changePassword().start(admin, user);
+      //UserData user = new UserData().withUsername("user10").withEmail("user10@localhost.localhost");
+      //app.changePassword().start(admin, user);
+      UserData user = app.changePassword().start(admin);
       List<MailMessage> mailMessages = app.mail().waitForMail(1, 10000);
       String confirmationLink = findConfirmationLink(mailMessages, user.getEmail());
       app.changePassword().finish(confirmationLink, passwordNew);
